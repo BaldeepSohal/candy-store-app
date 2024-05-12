@@ -4,9 +4,33 @@ A Company, NorthStar, operates a candy business. NorthStar has multiple stores a
 
 NorthStar's Technology Department plans to build an API system to handle the backend data interaction for consumers (customers) and candy products.
 
+## Setup local
 
-DB Migrations
+Install node dependencies -
 
-knex migrate:make <table name>
-knex migrate:latest
-knex migrate:rollback
+`npm install`
+
+Create build using below command -
+
+`npm run build`
+
+Start node App locally -
+
+`npm run dev`
+
+
+## DB Migrations
+
+Run, create and rollback DB migrations using below commands
+
+```python
+
+- knex migrate:make <table name>
+- knex migrate:latest
+- knex migrate:rollback
+
+```
+
+## API documentation
+
+Find API documentation here - https://docs.google.com/document/d/1JhNDoympZaau4-tWcsC9PqSrqzw-sRv7wx5hTnjTQyY/edit
