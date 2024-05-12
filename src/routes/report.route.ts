@@ -1,5 +1,4 @@
-import express, { Express, Request, Response } from "express";
-import { body, validationResult } from "express-validator";
+import express from "express";
 import reports from '../controllers/report';
 const reportsController = new reports();
 const router = express.Router();

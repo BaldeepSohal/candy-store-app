@@ -1,5 +1,5 @@
-function log(req: any, res: any, next: () => void)  {
-    console.log('Logging...');
+function log(data: any, next: () => void)  {
+    console.log('Logging...', data);
     next();
 }
 

@@ -2,6 +2,7 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import db from "../../db/db-config";
 import { Request, Response } from "express";
+import { IStore } from '../models/store'
 
 export default class StoreService {
 
@@ -14,7 +15,9 @@ export default class StoreService {
       const totalStores = await db("store");
       const totalPages = Math.ceil(totalStores.length / pageSize);
 
-      const paginatedStores = await db("store").limit(pageSize).offset(offset);
+      const paginatedStores = await db("store")
+      .select(db.raw('store_id, store_address, store_manager_name, DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") AS created_at, DATE_FORMAT(updated_at, "%Y-%m-%d %H:%i:%s") AS updated_at'))
+      .limit(pageSize).offset(offset);
 
       return {
         'page': page,
@@ -32,7 +35,9 @@ export default class StoreService {
 
   async getStore(id: string) {
     try {
-      const store = await db("store").where("store_id", id);
+      const store = await db("store")
+      .select(db.raw('store_id, store_address, store_manager_name, DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") AS created_at, DATE_FORMAT(updated_at, "%Y-%m-%d %H:%i:%s") AS updated_at'))
+      .where("store_id", id);
 
       if (!store) {
         return;
@@ -46,8 +51,11 @@ export default class StoreService {
 
   async addStore(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
     try {
-      const result = await db('store').insert({ store_address: req.body.address, 
-        store_manager_name: req.body.manager_name })
+
+      const data: IStore = { store_address: req.body.address, 
+        store_manager_name: req.body.manager_name };
+
+      const result = await db('store').insert(data)
         .catch(async function (err) {
           return err;
         })  
@@ -64,13 +72,16 @@ export default class StoreService {
 
   async updateStore(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
     try {
+
+      const data: IStore = { store_address: req.body.address, 
+        store_manager_name: req.body.manager_name };
+
       const store = await this.getStore(req.params.id);
       if (store == '') {
         return {'status': 'error' , 'message': 'Store not found!'};
       }
 
-      const result = await db('store').update({ store_address: req.body.address, 
-        store_manager_name: req.body.manager_name })
+      const result = await db('store').update(data)
         .catch(async function (err) {
           return err;
       });

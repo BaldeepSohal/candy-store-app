@@ -3,7 +3,18 @@ import CustomerService from '../services/customer';
 const customerService = new CustomerService();
 import { validationResult } from "express-validator";
 
+/**
+ * CustomerController
+ */
 export default class CustomerController {
+	
+	/**
+	 * getCustomers
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getCustomers(req: any, res: Response) {
 		try {
 			const customers = await customerService.getCustomers(req.query);
@@ -15,9 +26,16 @@ export default class CustomerController {
 	}
 
 
+	/**
+	 * getCustomer
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getCustomer(req: Request, res: Response) {
 		try {
-			const customer = await customerService.getCustomer(req.params.id);
+			const customer = await customerService.getCustomer(parseInt(req.params.id));
 			res.json(customer)
 		}
 		catch (err) {
@@ -25,6 +43,13 @@ export default class CustomerController {
 		}
 	}
 
+	/**
+	 * addCustomer
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async addCustomer(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req);
@@ -41,6 +66,13 @@ export default class CustomerController {
 		}
 	}
 
+	/**
+	 * updateCustomer
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async updateCustomer(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req);

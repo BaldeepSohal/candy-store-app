@@ -3,7 +3,18 @@ import OrderService from '../services/order';
 const orderService = new OrderService();
 import { validationResult } from "express-validator";
 
+/**
+ * InventoryController
+ */
 export default class OrderController {
+
+	/**
+	 * getOrders
+	 *
+	 * @param {any} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getOrders(req: any, res: Response) {
 		try {
 			const orders = await orderService.getOrders(req.query);
@@ -14,10 +25,16 @@ export default class OrderController {
 		}
 	}
 
-
+	/**
+	 * getOrder
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getOrder(req: Request, res: Response) {
 		try {
-			const Order = await orderService.getOrder(req.params.id);
+			const Order = await orderService.getOrder(parseInt(req.params.id));
 			res.json(Order)
 		}
 		catch (err) {
@@ -25,6 +42,13 @@ export default class OrderController {
 		}
 	}
 
+	/**
+	 * addOrder
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async addOrder(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req);
@@ -41,6 +65,13 @@ export default class OrderController {
 		}
 	}
 
+	/**
+	 * updateOrder
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async updateOrder(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req);

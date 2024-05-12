@@ -9,12 +9,12 @@ router.get('/' , inventoryController.getInventories);
 router.get('/:id', inventoryController.getInventory);
 
 router.post('/',
-[body("name").notEmpty().isLength({ min: 3 }).trim()],
+[body("inventory_name").notEmpty().isLength({ min: 3 }).trim()],
 inventoryController.addInventory
 )
 
 router.put('/:id',
-[body("name").notEmpty().isLength({ min: 3 }).trim()],
+[body("inventory_name").notEmpty().isLength({ min: 3 }).trim()],
 inventoryController.updateInventory
 )
 

@@ -3,7 +3,18 @@ import InventoryService from '../services/inventory';
 const inventoryService = new InventoryService();
 import { validationResult } from "express-validator";
 
+/**
+ * InventoryController
+ */
 export default class InventoryController {
+
+	/**
+	 * getInventories
+	 *
+	 * @param {any} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getInventories(req: any, res: Response) {
 		try {
 			const Inventory = await inventoryService.getInventories(req.query);
@@ -15,9 +26,16 @@ export default class InventoryController {
 	}
 
 
+	/**
+	 * getInventory
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getInventory(req: Request, res: Response) {
 		try {
-			const Inventory = await inventoryService.getInventory(req.params.id);
+			const Inventory = await inventoryService.getInventory(parseInt(req.params.id));
 			res.json(Inventory)
 		}
 		catch (err) {
@@ -25,6 +43,13 @@ export default class InventoryController {
 		}
 	}
 
+	/**
+	 * addInventory
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async addInventory(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req);
@@ -41,6 +66,13 @@ export default class InventoryController {
 		}
 	}
 
+	/**
+	 * updateInventory
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async updateInventory(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req);

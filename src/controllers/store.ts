@@ -3,7 +3,18 @@ import StoreService from '../services/store';
 const storeService = new StoreService();
 import { validationResult } from "express-validator";
 
+/**
+ * InventoryController
+ */
 export default class StoreController {
+
+	/**
+	 * getStores
+	 *
+	 * @param {any} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getStores(req: any, res: Response) {
 		console.log('getting Stores');
 		try {
@@ -16,6 +27,13 @@ export default class StoreController {
 	}
 
 
+	/**
+	 * getStore
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async getStore(req: Request, res: Response) {
 		console.log('getting a single Store');
 		try {
@@ -27,6 +45,13 @@ export default class StoreController {
 		}
 	}
 
+	/**
+	 * addStore
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async addStore(req: Request, res: Response) {
 		console.log('adding Store');
 		try {
@@ -44,6 +69,13 @@ export default class StoreController {
 		}
 	}
 
+	/**
+	 * updateStore
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @return {JSON}
+	 */
 	async updateStore(req: Request, res: Response) {
 		try {
 			const errors = validationResult(req);

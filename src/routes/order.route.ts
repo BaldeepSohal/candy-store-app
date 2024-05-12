@@ -15,7 +15,8 @@ router.post('/',
     body("inventory_id").notEmpty().trim(),
     body("store_id").notEmpty().trim(),
     body("quantity").notEmpty().isNumeric().trim(),
-    body("status").notEmpty().isString().trim()
+    body("status").notEmpty().isString().trim().isIn(['received', 'in progress', 'processed'])
+    .withMessage('Order status should be "received", "in progress" or "processed"')
 ],
   orderController.addOrder
 )
@@ -27,7 +28,8 @@ router.put('/:id',
     body("inventory_id").notEmpty().trim(),
     body("store_id").notEmpty().trim(),
     body("quantity").notEmpty().isNumeric().trim(),
-    body("status").notEmpty().isString().trim()
+    body("status").notEmpty().isString().trim().isIn(['received', 'in progress', 'processed'])
+    .withMessage('Order status should be "received", "in progress" or "processed"')
 ],
   orderController.updateOrder
 )
