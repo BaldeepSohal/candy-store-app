@@ -1,6 +1,9 @@
 import OrderService from '../src/services/order';
 const order = new OrderService;
 
+import request from "supertest";
+import app from "../src/index";
+
 
 describe('GET Orders', () => {
   it('should return the Orders', async () => {
@@ -10,7 +13,7 @@ describe('GET Orders', () => {
           {
               "order_id": 1,
               "status": "received",
-              "store_address": "Toronto, CA",
+              "store_address": "Toronto",
               "inventory_name": "SmartiesBoxTruck",
               "customer_name": "Mark",
               "quantity": 7,
@@ -27,7 +30,7 @@ describe('GET Orders', () => {
       {
           "order_id": 1,
           "status": "received",
-          "store_address": "Toronto, CA",
+          "store_address": "Toronto",
           "inventory_name": "SmartiesBoxTruck",
           "customer_name": "Mark",
           "quantity": 7,

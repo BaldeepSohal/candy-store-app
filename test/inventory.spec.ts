@@ -6,6 +6,7 @@ describe('GET Inventories', () => {
   it('should return the inventory', async () => {
     const result = await inventory.getInventories({ pageSize: "1", page: "1" });
     expect(result).toMatchObject({
+
       "inventories": [
           {
               "inventory_id": 1,
