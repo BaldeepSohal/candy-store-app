@@ -1,6 +1,3 @@
-import { Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 import db from "../../db/db-config";
 import { IInventory } from '../models/inventory';
 
@@ -13,9 +10,12 @@ export default class InventoryService {
 	 * getInventories
 	 *
 	 * @param {Object} query
-	 * @return {Array}
+	 * @return {Object}
 	 */
-  async getInventories(query: { page: string; pageSize: string; }) {
+  async getInventories(query: { page: string; pageSize: string; } = {
+    page: "",
+    pageSize: ""
+  }) {
     try {
       const page = parseInt(query.page);
       const pageSize = parseInt(query.pageSize);
@@ -25,7 +25,7 @@ export default class InventoryService {
       const totalPages = Math.ceil(totalInventories.length / pageSize);
 
       const paginatedInventories = await db("inventory")
-      .select(db.raw('inventory_id, inventory_name, manufacture_date, available_quantity, DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") AS created_at, DATE_FORMAT(updated_at, "%Y-%m-%d %H:%i:%s") AS updated_at'))
+      .select(db.raw('inventory_id, inventory_name, DATE_FORMAT(manufacture_date, "%Y-%m-%d") AS manufacture_date, available_quantity, DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") AS created_at, DATE_FORMAT(updated_at, "%Y-%m-%d %H:%i:%s") AS updated_at'))
       .limit(pageSize).offset(offset);
 
       return {
@@ -46,12 +46,12 @@ export default class InventoryService {
 	 * getInventory
 	 *
 	 * @param {number} id
-	 * @return {Array}
+	 * @return {Object}
 	 */
   async getInventory(id: number) {
     try {
       const inventory: any = await db("inventory")
-      .select(db.raw('inventory_id, inventory_name, manufacture_date, available_quantity, DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") AS created_at, DATE_FORMAT(updated_at, "%Y-%m-%d %H:%i:%s") AS updated_at'))
+      .select(db.raw('inventory_id, inventory_name,  DATE_FORMAT(manufacture_date, "%Y-%m-%d") AS manufacture_date, available_quantity, DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") AS created_at, DATE_FORMAT(updated_at, "%Y-%m-%d %H:%i:%s") AS updated_at'))
       .where("inventory_id", id);
       if (inventory == '') {
         return {'status': 'error' , 'message': 'inventory not found!'};
@@ -67,15 +67,12 @@ export default class InventoryService {
   /**
 	 * addInventory
 	 *
-	 * @param {Request} req
-	 * @return {Array}
+	 * @param {IInventory} data
+	 * @return {Object}
 	 */
-  async addInventory(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
+  async addInventory(data: IInventory) {
     try {
-      const data: IInventory = {inventory_name: req.body.inventory_name,
-        manufacture_date: req.body.manufacture_date,
-        available_quantity: req.body.available_quantity
-      };
+      
       const result = await db('inventory').insert(data)
         .catch(async function (err) {
           return err;
@@ -94,27 +91,25 @@ export default class InventoryService {
   /**
 	 * updateInventory
 	 *
-	 * @param {Request} req
-	 * @return {Array}
+	 * @param {IInventory} data
+	 * @param {number} id
+	 * @return {Object}
 	 */
-  async updateInventory(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
+  async updateInventory(data: IInventory, id: number) {
     try {
-      const data: IInventory = { inventory_name: req.body.inventory_name,
-        manufacture_date: req.body.manufacture_date,
-        available_quantity: req.body.available_quantity
-      };
-      const inventory = await this.getInventory(parseInt(req.params.id));
+      
+      const inventory = await this.getInventory(id);
       if (inventory == '') {
         return {'status': 'error' , 'message': 'inventory not found!'};
       }
 
-      const result = await db('inventory').update(data).where("inventory_id", req.params.id)
+      const result = await db('inventory').update(data).where("inventory_id", id)
         .catch(async function (err) {
           return err;
       });
 
       // Send updated inventory in response
-      const updatedInventory = await this.getInventory(parseInt(req.params.id));
+      const updatedInventory = await this.getInventory(id);
       return updatedInventory;
 
     } catch (err) {

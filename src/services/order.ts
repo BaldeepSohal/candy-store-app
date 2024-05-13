@@ -15,9 +15,12 @@ export default class OrderService {
 	 * getOrders
 	 *
 	 * @param {Object} query
-	 * @return {Array}
+	 * @return {Object}
 	 */
-  async getOrders(query: { page: string; pageSize: string; }) {
+  async getOrders(query: { page: string; pageSize: string; } = {
+    page: "",
+    pageSize: ""
+  }) {
     try {
       const page = parseInt(query.page);
       const pageSize = parseInt(query.pageSize);
@@ -51,7 +54,7 @@ export default class OrderService {
 	 * getOrder
 	 *
 	 * @param {number} id
-	 * @return {Array}
+	 * @return {Object}
 	 */
   async getOrder(id: number) {
     try {
@@ -75,25 +78,14 @@ export default class OrderService {
   /**
 	 * addOrder
 	 *
-	 * @param {object} req
-	 * @return {Array}
+	 * @param {IOrder} data
+	 * @return {Object}
 	 */
-  async addOrder(req: {
-    body: {
-      customer_id: number; inventory_id: number; store_id: number; quantity: number; status: any;
-    }
-  }) {
+  async addOrder(data: IOrder) {
     try {
-      const data: IOrder = {
-        inventory_id: req.body.inventory_id,
-        customer_id: req.body.customer_id,
-        store_id: req.body.store_id,
-        quantity: req.body.quantity,
-        status: req.body.status
-      };
 
       // check if order quantity exceeds inventory available and update quantity
-      this.updateQuantity(req);
+      this.updateQuantity(data);
 
       // update order
       const newOrder = await db('order').insert(data)
@@ -114,34 +106,28 @@ export default class OrderService {
   /**
 	 * updateOrder
 	 *
-	 * @param {Request} req
-	 * @return {Array}
+	 * @param {IOrder} data
+	 * @param {number} id
+	 * @return {Object}
 	 */
-  async updateOrder(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
+  async updateOrder(data: IOrder, id: number) {
     try {
-      const data: IOrder = {
-        customer_id: req.body.customer_id,
-        inventory_id: req.body.inventory_id,
-        store_id: req.body.store_id,
-        quantity: req.body.quantity,
-        status: req.body.status
-      };
 
-      const order: any = await this.getOrder(parseInt(req.params.id));
+      const order: any = await this.getOrder(id);
       if (order == '') {
         return { 'status': 'error', 'message': 'Order not found!' };
       }
 
       // check if order quantity exceeds inventory available and update quantity
-      await this.updateQuantity(req, order[0].quantity);
+      await this.updateQuantity(data, order[0].quantity);
 
-      const result = await db('order').update(data).where("order_id", req.params.id)
+      const result = await db('order').update(data).where("order_id", id)
         .catch(async function (err) {
           return err;
         });
 
       // Send updated Order in response
-      const updatedOrder = await this.getOrder(parseInt(req.params.id));
+      const updatedOrder = await this.getOrder(id);
       return updatedOrder;
 
     } catch (err) {
@@ -153,13 +139,13 @@ export default class OrderService {
   /**
 	 * updateQuantity
 	 *
-	 * @param {object} req
+	 * @param {IOrder} data
 	 * @param {string} orderQuantity
 	 * @return {JSON}
 	 */
-  async updateQuantity(req: { body: { inventory_id: number; quantity: number; }; }, orderQuantity: string = '') {
+  async updateQuantity(data: IOrder, orderQuantity: string = '') {
     try {
-      const inventory = await inventoryService.getInventory(req.body.inventory_id);
+      const inventory = await inventoryService.getInventory(data.inventory_id);
 
       if(!inventory){
         return { 'status': 'error', 'message': 'Inventory not found!' };
@@ -171,20 +157,20 @@ export default class OrderService {
         // if updating quantity, reset inventory count to update new order quantity
         inventoryCount = parseInt(inventory[0].available_quantity) + parseInt(orderQuantity);
 
-        const result = await db('inventory').update({available_quantity: inventoryCount}).where("inventory_id", req.body.inventory_id)
+        const result = await db('inventory').update({available_quantity: inventoryCount}).where("inventory_id", data.inventory_id)
         .catch(async function (err) {
           return err;
         });
       
       }
 
-      if (inventoryCount < req.body.quantity) {
+      if (inventoryCount < data.quantity) {
         return { 'status': 'error', 'message': 'Order quantity is higher than available inventory items!' };
       }
 
       // update inventory count
-      const newQuantity = parseInt(inventoryCount) - req.body.quantity;
-      await db('inventory').update({ available_quantity: newQuantity }).where("inventory_id", req.body.inventory_id)
+      const newQuantity = parseInt(inventoryCount) - data.quantity;
+      await db('inventory').update({ available_quantity: newQuantity }).where("inventory_id", data.inventory_id)
       .catch(async function (err) {
         return err;
       });

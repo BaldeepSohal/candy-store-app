@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import InventoryService from '../services/inventory';
 const inventoryService = new InventoryService();
 import { validationResult } from "express-validator";
+import { IInventory } from "../models/inventory";
 
 /**
  * InventoryController
@@ -57,8 +58,13 @@ export default class InventoryController {
 			if (!errors.isEmpty()) {
 				return res.status(400).json({ errors: errors.array() });
 			}
+
+			const data: IInventory = {inventory_name: req.body.inventory_name,
+				manufacture_date: req.body.manufacture_date,
+				available_quantity: req.body.available_quantity
+			  };
 			
-			const Inventory = await inventoryService.addInventory(req);
+			const Inventory = await inventoryService.addInventory(data);
 			res.json(Inventory)
 		}
 		catch (err) {
@@ -81,7 +87,12 @@ export default class InventoryController {
 				return res.status(400).json({ errors: errors.array() });
 			}
 
-			const inventory = await inventoryService.updateInventory(req);
+			const data: IInventory = {inventory_name: req.body.inventory_name,
+				manufacture_date: req.body.manufacture_date,
+				available_quantity: req.body.available_quantity
+			  };
+
+			const inventory = await inventoryService.updateInventory(data, parseInt(req.params.id));
 			res.json(inventory)
 		}
 		catch (err) {

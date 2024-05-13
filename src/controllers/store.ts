@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import StoreService from '../services/store';
 const storeService = new StoreService();
 import { validationResult } from "express-validator";
+import { IStore } from "../models/store";
 
 /**
  * InventoryController
@@ -37,7 +38,7 @@ export default class StoreController {
 	async getStore(req: Request, res: Response) {
 		console.log('getting a single Store');
 		try {
-			const Store = await storeService.getStore(req.params.id);
+			const Store = await storeService.getStore(parseInt(req.params.id));
 			res.json(Store)
 		}
 		catch (err) {
@@ -60,8 +61,11 @@ export default class StoreController {
 			if (!errors.isEmpty()) {
 				return res.status(400).json({ errors: errors.array() });
 			}
+
+			const data: IStore = { store_address: req.body.address, 
+				store_manager_name: req.body.manager_name };
 			
-			const Store = await storeService.addStore(req);
+			const Store = await storeService.addStore(data);
 			res.json(Store)
 		}
 		catch (err) {
@@ -84,7 +88,10 @@ export default class StoreController {
 				return res.status(400).json({ errors: errors.array() });
 			}
 
-			const store = await storeService.updateStore(req);
+			const data: IStore = { store_address: req.body.address, 
+				store_manager_name: req.body.manager_name };
+
+			const store = await storeService.updateStore(parseInt(req.params.id), data);
 			res.json(store)
 		}
 		catch (err) {

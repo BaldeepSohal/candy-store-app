@@ -1,12 +1,21 @@
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 import db from "../../db/db-config";
-import { Request, Response } from "express";
 import { IStore } from '../models/store'
 
+/**
+ * StoreService
+ */
 export default class StoreService {
 
-  async getStores(query: { page: string; pageSize: string; }) {
+  /**
+	 * getStores
+	 *
+	 * @param {Object} query
+	 * @return {Object}
+	 */
+  async getStores(query: { page: string; pageSize: string; } = {
+    page: "",
+    pageSize: ""
+  }) {
     try {
       const page = parseInt(query.page);
       const pageSize = parseInt(query.pageSize);
@@ -33,7 +42,13 @@ export default class StoreService {
     }
   };
 
-  async getStore(id: string) {
+  /**
+	 * getStore
+	 *
+	 * @param {number} id
+	 * @return {Object}
+	 */
+  async getStore(id: number) {
     try {
       const store = await db("store")
       .select(db.raw('store_id, store_address, store_manager_name, DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") AS created_at, DATE_FORMAT(updated_at, "%Y-%m-%d %H:%i:%s") AS updated_at'))
@@ -49,11 +64,14 @@ export default class StoreService {
     }
   };
 
-  async addStore(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
+  /**
+	 * addStore
+	 *
+	 * @param {IStore} data
+	 * @return {Object}
+	 */
+  async addStore(data: IStore) {
     try {
-
-      const data: IStore = { store_address: req.body.address, 
-        store_manager_name: req.body.manager_name };
 
       const result = await db('store').insert(data)
         .catch(async function (err) {
@@ -70,13 +88,17 @@ export default class StoreService {
     }
   }
 
-  async updateStore(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
+  /**
+	 * updateStore
+	 *
+	 * @param {IStore} data
+	 * @param {number} id
+	 * @return {Object}
+	 */
+  async updateStore(id: number, data: IStore) {
     try {
 
-      const data: IStore = { store_address: req.body.address, 
-        store_manager_name: req.body.manager_name };
-
-      const store = await this.getStore(req.params.id);
+      const store = await this.getStore(id);
       if (store == '') {
         return {'status': 'error' , 'message': 'Store not found!'};
       }
@@ -87,7 +109,7 @@ export default class StoreService {
       });
 
       // Send updated Store in response
-      const updatedStore = await this.getStore(req.params.id);
+      const updatedStore = await this.getStore(id);
       return updatedStore;
 
     } catch (err) {

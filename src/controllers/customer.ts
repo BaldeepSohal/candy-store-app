@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import CustomerService from '../services/customer';
 const customerService = new CustomerService();
 import { validationResult } from "express-validator";
+import { ICustomer } from "../models/customer";
 
 /**
  * CustomerController
@@ -58,7 +59,9 @@ export default class CustomerController {
 				return res.status(400).json({ errors: errors.array() });
 			}
 
-			const customer = await customerService.addCustomer(req);
+			const data:ICustomer = {'customer_name': req.body.name};
+
+			const customer = await customerService.addCustomer(data);
 			res.json(customer)
 		}
 		catch (err) {
@@ -81,7 +84,9 @@ export default class CustomerController {
 				return res.status(400).json({ errors: errors.array() });
 			}
 
-			const customer = await customerService.updateCustomer(req);
+			const data:ICustomer = {'customer_name': req.body.name};
+
+			const customer = await customerService.updateCustomer(parseInt(req.params.id),data);
 			res.json(customer)
 		}
 		catch (err) {

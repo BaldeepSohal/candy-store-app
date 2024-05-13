@@ -35,3 +35,5 @@ const port = process.env.NODE_DOCKER_PORT || 3000;
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
+
+export default app;

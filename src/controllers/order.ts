@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import OrderService from '../services/order';
 const orderService = new OrderService();
 import { validationResult } from "express-validator";
+import { IOrder } from "../models/order";
 
 /**
  * InventoryController
@@ -56,8 +57,16 @@ export default class OrderController {
 			if (!errors.isEmpty()) {
 				return res.status(400).json({ errors: errors.array() });
 			}
+
+			const data: IOrder = {
+				customer_id: req.body.customer_id,
+				inventory_id: req.body.inventory_id,
+				store_id: req.body.store_id,
+				quantity: req.body.quantity,
+				status: req.body.status
+			  };
 			
-			const Order = await orderService.addOrder(req);
+			const Order = await orderService.addOrder(data);
 			res.json(Order)
 		}
 		catch (err) {
@@ -80,7 +89,15 @@ export default class OrderController {
 				return res.status(400).json({ errors: errors.array() });
 			}
 
-			const order = await orderService.updateOrder(req);
+			const data: IOrder = {
+				customer_id: req.body.customer_id,
+				inventory_id: req.body.inventory_id,
+				store_id: req.body.store_id,
+				quantity: req.body.quantity,
+				status: req.body.status
+			  };
+
+			const order = await orderService.updateOrder(data, parseInt(req.params.id));
 			res.json(order)
 		}
 		catch (err) {

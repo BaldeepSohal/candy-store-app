@@ -17,6 +17,10 @@ Start node App locally -
 
 `npm run dev`
 
+## Tests
+
+`npm run test`
+
 
 ## DB Migrations
 
