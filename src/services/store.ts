@@ -103,7 +103,7 @@ export default class StoreService {
         return {'status': 'error' , 'message': 'Store not found!'};
       }
 
-      const result = await db('store').update(data)
+      const result = await db('store').update(data).where("store_id", id)
         .catch(async function (err) {
           return err;
       });
