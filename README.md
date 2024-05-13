@@ -5,6 +5,8 @@ NorthStar's Technology Department plans to build an API system to handle the bac
 
 ## Setup local
 
+Get checkout to "main" branch to pull the latest changes.
+
 Install node dependencies -
 
 `npm install`
