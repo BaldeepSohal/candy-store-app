@@ -1,4 +1,11 @@
 {
     "app_name": "Candy Store App!!",
-    "env": "development"
+    "database": {
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "mysql123",
+        "database": "candystore"
+    },
+    "env": "development",
+    "jwtPrivateKey": "candyStore_jwtPrivateKey"
 }

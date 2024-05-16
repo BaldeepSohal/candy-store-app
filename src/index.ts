@@ -5,11 +5,15 @@ import router from './routes/router';
 import logger from "./middlewares/logger";
 import "dotenv/config";
 
+if(!config.get('jwtPrivateKey')){
+    console.error('FATAL ERROR: jwtPrivateKey notv defined.');
+    process.exit(1);
+}
+
 const app: Express = express();
 
 app.use(express.json());
 
-// app.use(logger);
 
 app.use(morgan('tiny'));
 
