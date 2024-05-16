@@ -15,7 +15,7 @@ router.use('/api/inventories', authenticate, inventories);
 router.use('/api/stores', authenticate, store);
 router.use('/api/orders', authenticate, order);
 router.use('/api/report', authenticate, report);
-router.use('/api/user', authenticate, user);
-router.use('/api/auth', authenticate, auth);
+router.use('/api/user', user);
+router.use('/api/auth', auth);
 
 export default router;
