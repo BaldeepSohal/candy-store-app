@@ -12,7 +12,7 @@ export default router.post("/", async (req: Request, res: Response) => {
       const errors = validationResult(req);
 
 			if (!errors.isEmpty()) {
-				return res.status(400).json({ errors: errors.array() });
+				return res.status(400).json({'status': 'error' , errors: errors.array() });
 			}
 
       const user: any = await db("user").select('id', 'email', 'password').where("email", req.body.email);
