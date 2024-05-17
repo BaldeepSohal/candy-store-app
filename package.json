@@ -2,7 +2,7 @@
   "name": "candy-store",
   "version": "1.0.0",
   "description": "NorthStar's APIs to handle the backend data interaction for consumers (customers) and candy products.",
-  "main": "dist/index.ts",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",

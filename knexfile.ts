@@ -1,6 +1,6 @@
 import type { Knex } from "knex";
 
-const config: { [key: string]: Knex.Config } = {
+export const config: { [key: string]: Knex.Config } = {
   development: {
     client: "mysql",
     connection: {
@@ -42,4 +42,3 @@ const config: { [key: string]: Knex.Config } = {
 
 };
 
-module.exports = config;
