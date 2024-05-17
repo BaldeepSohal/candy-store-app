@@ -39,3 +39,7 @@ Run, create and rollback DB migrations using below commands
 ## API documentation
 
 Find API documentation here - https://docs.google.com/document/d/1JhNDoympZaau4-tWcsC9PqSrqzw-sRv7wx5hTnjTQyY/edit
+
+Diagram - https://excalidraw.com/#json=h9nBDhMOAt3JrLhj8079B,kfynPBFHtmLn3G-BRmAKIw
+
+
